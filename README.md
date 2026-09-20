@@ -1,6 +1,6 @@
 # Denise's Recipe Box
 
-69 saved recipes in 12 collections, adapted from Denise's supplied recipe box.
+70 saved recipes in 12 collections, adapted from Denise's supplied recipe box.
 
 ## Use on a phone
 Open the published site in Safari (iPhone) or Chrome (Android). Use Share > Add to Home Screen on iPhone, or Install app / Add to Home screen on Android. After the first online visit, recipe text works offline; remote photos require a connection.
