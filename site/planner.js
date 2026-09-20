@@ -45,13 +45,13 @@ function renderPlanner() {
       <label>Recipe<select id="planRecipe">${sortRecipes(RECIPES).map(recipeOption).join('')}</select></label>
       <label>Week<select id="addWeek">${weekOptions(plan, 1)}</select></label>
       <button class="primary-button" id="addToPlan">Add meal</button>
-    </div>${!plan.meals.length ? '<div class="starter-callout"><strong>Your eight-meal keto-style menu</strong><p>No seafood, chili or beef tips. Includes the suggested sides and enough for leftovers, using full recipe batches (8–12 servings).</p><button id="starterPlan" class="secondary-button">Use our eight meals + sides</button></div>' : ''}</div>
+    </div>${!plan.meals.length ? '<div class="starter-callout"><strong>Your six-meal keto-style menu</strong><p>No seafood, chili, beef tips, asparagus or cauliflower. Includes sides and leftovers, using full recipe batches (8–12 servings).</p><button id="starterPlan" class="secondary-button">Use our six meals + sides</button></div>' : ''}</div>
     <div class="plan-weeks">${Array.from({length:plan.weeks}, (_, i) => weekHtml(plan, i + 1)).join('')}</div>
     <section class="planner-panel"><h3>Suggest meals</h3><p>Discover untried meals already in your recipe box. Suggestions skip meals in this plan.</p>
       <div class="suggest-settings"><label>How many?<input id="suggestCount" type="number" min="1" max="14" required value="${state.prefs.count}"></label>
       ${[['keto','Keto / low-carb choices'],['untried','Only recipes I haven’t tried'],['seafood','No seafood'],['chili','No chili'],['beefTips','No beef tips']].map(([key,label]) => `<label class="check-label"><input id="pref-${key}" type="checkbox" ${state.prefs[key] ? 'checked' : ''}>${label}</label>`).join('')}
       <button class="primary-button" id="suggestMeals">Suggest meals</button></div>
-      <p class="planner-hint">Keto-style choices use recipe labels and our selected meals, not calculated carb totals. Serve fajitas without tortillas or rice.</p>
+      <p class="planner-hint">Automatic selections always exclude asparagus and cauliflower, including ingredients and starter sides. Keto-style choices use recipe labels, not calculated carb totals. Serve fajitas without tortillas or rice.</p>
       <div id="suggestions" aria-live="polite">${suggestionsHtml(plan)}</div>
     </section>
     <section class="planner-panel" id="grocerySection"><div class="planner-heading"><div><h3>Grocery list</h3><p>Combined ingredients for every planned meal and its listed sides.</p></div><div class="button-row"><button id="copyGroceries" class="secondary-button">Copy list</button><button id="downloadGroceries" class="secondary-button">Download list</button></div></div>
@@ -80,7 +80,7 @@ function renderPlanner() {
   };
   document.getElementById('addToPlan').onclick = () => addPlannedRecipe(document.getElementById('planRecipe').value, Number(document.getElementById('addWeek').value));
   const starter = document.getElementById('starterPlan');
-  if (starter) starter.onclick = () => { changePlanner((s,p) => {p.meals = MealPlanner.starterMeals(p, RECIPES);}, 'Eight meals and sides saved. Full batches make 8–12 servings each.'); renderPlanner(); };
+  if (starter) starter.onclick = () => { changePlanner((s,p) => {p.meals = MealPlanner.starterMeals(p, RECIPES);}, 'Six meals and sides saved. Full batches make 8–12 servings each.'); renderPlanner(); };
   document.getElementById('suggestMeals').onclick = () => {
     const count = document.getElementById('suggestCount');
     if (!count.reportValidity()) return;

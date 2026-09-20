@@ -1,5 +1,5 @@
 const PREFIX = 'recipe-box-' + new URL(self.registration.scope).pathname + '-';
-const CACHE = PREFIX + 'meal-planner-v2';
+const CACHE = PREFIX + 'meal-planner-no-asparagus-cauliflower-v3';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './planner-core.js', './planner.js', './recipes.js', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

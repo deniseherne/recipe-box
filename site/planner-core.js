@@ -4,11 +4,9 @@
     {title:'Keto Chicken Parmesan', servings:8, side:'Zucchini noodles and green salad', extras:['4 zucchini','8 cups mixed salad greens','4 tablespoons olive oil','2 tablespoons white wine vinegar']},
     {title:'Easy Sheet Pan Chicken Fajitas', servings:10, side:'Lettuce wraps, avocado and sour cream; no tortillas or rice', extras:['2 heads butter lettuce','4 avocados','1 cup sour cream']},
     {title:'Keto Chicken and Broccoli Casserole', servings:12, side:'Cucumber salad', extras:['3 cucumbers','2 tablespoons olive oil','2 tablespoons white wine vinegar']},
-    {title:'Keto Tex-Mex Ground Beef Casserole', servings:12, side:'Avocado and shredded lettuce', extras:['4 avocados','1 head romaine lettuce']},
-    {title:'Keto Smothered Chicken Thighs', servings:8, side:'Roasted asparagus', extras:['2 pounds asparagus','2 tablespoons olive oil']},
+    {title:'Keto Smothered Chicken Thighs', servings:8, side:'Roasted green beans', extras:['2 pounds green beans','2 tablespoons olive oil']},
     {title:'Low-Carb Italian Chicken Tenders', servings:8, side:'Roasted zucchini and green salad', extras:['4 zucchini','8 cups mixed salad greens','4 tablespoons olive oil','2 tablespoons white wine vinegar']},
-    {title:'Keto Sheet Pan Frittata', servings:8, side:'Green salad', extras:['8 cups mixed salad greens','2 tablespoons olive oil','1 tablespoon white wine vinegar']},
-    {title:'Lemon-Roasted Chicken', servings:12, side:'Cauliflower mash and sauteed spinach', extras:['2 heads cauliflower','2 pounds fresh spinach','4 tablespoons butter','1/2 cup heavy cream','2 tablespoons olive oil']}
+    {title:'Keto Sheet Pan Frittata', servings:8, side:'Green salad', extras:['8 cups mixed salad greens','2 tablespoons olive oil','1 tablespoon white wine vinegar']}
   ];
   const DEFAULT_PREFS = {keto:true, untried:true, seafood:true, chili:true, beefTips:true, count:4};
   const validDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value+'T12:00:00')) && new Date(value+'T12:00:00').getDate() === Number(value.slice(-2));
@@ -44,11 +42,16 @@
   function starterMeals(plan,recipes) {
     return STARTER.map((s,i)=>{
       const r=recipes.find(r=>r.title===s.title); if(!r)return null;
-      return {...addMeal(plan,r,plan.weeks===2&&i>=4?2:1,s.servings),side:s.side,extras:s.extras,extraBase:s.servings};
+      if (hasExcludedVegetables([r.title,...r.ingredients,s.side,...s.extras].join(' '))) return null;
+      return {...addMeal(plan,r,plan.weeks===2&&i>=3?2:1,s.servings),side:s.side,extras:s.extras,extraBase:s.servings};
     }).filter(Boolean);
   }
+  // Denise's standing preference applies to every automatic selection, even
+  // older saved settings and suggestions with the keto filter switched off.
+  function hasExcludedVegetables(text) { return /\b(?:asparagus|cauliflower)\b/i.test(text); }
   function eligible(recipe,prefs,review) {
     const title=recipe.title.toLowerCase(); const ingredients=recipe.ingredients.join(' ').toLowerCase();
+    if(hasExcludedVegetables(title+' '+ingredients))return false;
     if(prefs.seafood && /\b(salmon|tuna|shrimp|prawn|fish|cod|tilapia|haddock|halibut|trout|sardine|anchov\w*|crab|lobster|clam|mussel|oyster|scallop|seafood)\b/.test(title+' '+ingredients))return false;
     if(prefs.chili && /\bchill?i\b/.test(title))return false;
     if(prefs.beefTips && /beef tips/.test(title))return false;
@@ -91,7 +94,7 @@
     if(/broth|stock/.test(name))return 'Pantry & seasonings';
     if(/chicken|ground beef|bacon|turkey|pork(?! rind)|sausage/.test(name))return 'Meat & poultry';
     if(/cheese|cheddar|parmesan|mozzarella|cream|butter$|ghee|eggs?\b/.test(name))return 'Dairy & eggs';
-    if(/lettuce|salad greens|zucchini|avocado|cucumber|asparagus|spinach|cauliflower heads|onions?|mushroom|bell peppers|lemon|garlic cloves|rosemary/.test(name) && !/powder|dried/.test(name))return 'Produce';
+    if(/lettuce|salad greens|zucchini|avocado|cucumber|asparagus|green beans|spinach|cauliflower heads|onions?|mushroom|bell peppers|lemon|garlic cloves|rosemary/.test(name) && !/powder|dried/.test(name))return 'Produce';
     if(/broccoli|frozen|riced cauliflower/.test(name))return 'Vegetables / frozen';
     return 'Pantry & seasonings';
   }
