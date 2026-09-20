@@ -1,5 +1,5 @@
 const PREFIX = 'recipe-box-' + new URL(self.registration.scope).pathname + '-';
-const CACHE = PREFIX + '95e7c0908ffa';
+const CACHE = PREFIX + '1a0eb2319734';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './recipes.js', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
