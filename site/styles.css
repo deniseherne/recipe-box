@@ -378,3 +378,12 @@ button { cursor: pointer; }
  .fav-btn-detail {min-height:44px;}
  .breadcrumb {overflow-wrap:anywhere;}
 }
+
+.recipe-review {display:flex;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:20px 0;background:#f0f5f3;}
+.recipe-review legend {font-weight:600;color:var(--accent-dark);padding:0 6px;}
+.tried-control {display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;}
+.tried-control input {width:20px;height:20px;accent-color:#3c5878;}
+.recipe-review select {font:inherit;font-size:16px;min-height:44px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);}
+.recipe-review select:disabled {opacity:.55;}
+#reviewStatus {flex-basis:100%;font-size:12px;color:var(--muted);}
+.tried-tag {background:#d9eadf!important;color:#235735!important;font-weight:600;}

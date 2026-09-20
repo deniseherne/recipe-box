@@ -44,6 +44,27 @@ function setNotes(url, val) {
   } catch(e) { return false; }
 }
 
+function getReview(url) {
+  try {
+    const value = JSON.parse(localStorage.getItem('recipeReview:' + url) || '{}');
+    return { tried: value?.tried === true, score: Number.isInteger(value?.score) && value.score >= 1 && value.score <= 10 ? value.score : null };
+  } catch { return { tried: false, score: null }; }
+}
+function saveReview(url, review) {
+  try { localStorage.setItem('recipeReview:' + url, JSON.stringify(review)); return true; }
+  catch { return false; }
+}
+function reviewTag(url) {
+  const review = getReview(url);
+  return review.tried ? `<span class="tag tried-tag">Tried${review.score ? ` · ${review.score}/10` : ''}</span>` : '';
+}
+function renderTried() {
+  renderSidebar('tried', null);
+  const recipes = sortRecipes(RECIPES.filter(r => getReview(r.url).tried));
+  document.getElementById('app').innerHTML = '<div class="breadcrumb">Tried recipes</div>' +
+    (recipes.length ? '<div class="recipe-list">' + recipes.map(recipeCardHtml).join('') + '</div>' : '<div class="empty-state">No tried recipes yet. Open a recipe to mark it tried and give it a score.</div>');
+}
+
 function getFavorites() {
   try { return new Set(JSON.parse(localStorage.getItem('favoriteRecipeUrls') || '[]')); } catch(e) { return new Set(); }
 }
@@ -86,6 +107,7 @@ function renderSidebar(activeKind, activeParam) {
   html += `<button type="button" class="side-item ${activeKind === 'favorites' ? 'active' : ''}" onclick="navigate('favorites')">
     <span>★ Favorites</span><span class="badge">${favCount}</span>
   </button>`;
+  html += `<button type="button" class="side-item ${activeKind === 'tried' ? 'active' : ''}" onclick="navigate('tried')"><span>Tried recipes</span><span class="badge">${RECIPES.filter(r => getReview(r.url).tried).length}</span></button>`;
   html += `<div class="side-divider"></div>`;
 
   SIDEBAR_GROUPS.forEach(group => {
@@ -119,7 +141,7 @@ function recipeCardHtml(r) {
       <div class="card-body">
         <div class="title">${r.title}</div>
         <div class="meta">${[r.prepTime && ('Prep ' + r.prepTime), r.cookTime && ('Cook ' + r.cookTime), r.yield].filter(Boolean).join(' &middot; ')}</div>
-        <div class="tags">${r.categories.map(c => `<span class="tag">${c}</span>`).join('')}</div>
+        <div class="tags">${reviewTag(r.url)}${r.categories.map(c => `<span class="tag">${c}</span>`).join('')}</div>
       </div>
     </div>`;
 }
@@ -169,6 +191,13 @@ function renderRecipe(urlEncoded) {
   if (r.image) html += `<img class="hero" src="${r.image}" alt="${r.title}" onerror="this.style.display='none'">`;
   const fav = isFavorite(r.url);
   html += `<div class="detail-header-row"><h2>${r.title}</h2><button class="fav-btn-detail ${fav ? 'active' : ''}" onclick="toggleFavorite('${r.url}', event)">${fav ? '★ Favorited' : '☆ Add to Favorites'}</button></div>`;
+  const review = getReview(r.url);
+  html += `<fieldset class="recipe-review"><legend>My experience</legend>
+    <label class="tried-control"><input id="triedRecipe" type="checkbox" ${review.tried ? 'checked' : ''}> I've tried this</label>
+    <label for="recipeScore">My score</label>
+    <select id="recipeScore" ${review.tried ? '' : 'disabled'}><option value="">Not rated</option>${Array.from({length:10}, (_, i) => `<option value="${i+1}" ${review.score === i+1 ? 'selected' : ''}>${i+1} / 10</option>`).join('')}</select>
+    <span id="reviewStatus" role="status">Saved on this device only</span>
+  </fieldset>`;
   if (r.description) html += `<div class="desc">${r.description}</div>`;
   html += '<div class="meta-row">';
   if (r.prepTime) html += `<div><strong>Prep</strong>${r.prepTime}</div>`;
@@ -189,6 +218,24 @@ function renderRecipe(urlEncoded) {
   html += '</div>';
   document.getElementById('app').innerHTML = html;
 
+  const triedInput = document.getElementById('triedRecipe');
+  const scoreInput = document.getElementById('recipeScore');
+  function updateReview() {
+    const next = { tried: triedInput.checked, score: scoreInput.value ? Number(scoreInput.value) : null };
+    if (saveReview(r.url, next)) {
+      scoreInput.disabled = !next.tried;
+      document.getElementById('reviewStatus').textContent = 'Saved on this device';
+      renderSidebar('category', r.categories[0]);
+    } else {
+      const previous = getReview(r.url);
+      triedInput.checked = previous.tried;
+      scoreInput.value = previous.score ?? '';
+      scoreInput.disabled = !previous.tried;
+      document.getElementById('reviewStatus').textContent = 'Unable to save — browser storage is unavailable.';
+    }
+  }
+  triedInput.addEventListener('change', updateReview);
+  scoreInput.addEventListener('change', updateReview);
   document.getElementById('notesArea').addEventListener('input', function() {
     document.getElementById('saveStatus').textContent = setNotes(r.url, this.value)
       ? 'Saved on this device' : 'Unable to save — browser storage is unavailable.';
@@ -219,6 +266,7 @@ function navigate(view, param) {
   document.getElementById('search').value = '';
   if (view === 'home') window.location.hash = '';
   else if (view === 'favorites') window.location.hash = 'favorites';
+  else if (view === 'tried') window.location.hash = 'tried';
   else if (view === 'category') window.location.hash = 'category/' + param;
   else if (view === 'recipe') window.location.hash = 'recipe/' + param;
 }
@@ -227,6 +275,7 @@ function route() {
   const hash = window.location.hash.replace(/^#/, '');
   if (!hash) { renderHome(); return; }
   if (hash === 'favorites') { renderFavorites(); return; }
+  if (hash === 'tried') { renderTried(); return; }
   const [view, param] = hash.split(/\/(.+)/);
   if (view === 'search' && param) { document.getElementById('search').value = decodeURIComponent(param); handleSearch(decodeURIComponent(param)); }
   else if (view === 'category' && param) renderCategory(param);
@@ -242,5 +291,10 @@ document.getElementById('menuToggle').addEventListener('click', () => {
   document.getElementById('menuToggle').setAttribute('aria-expanded', String(open));
 });
 if ('serviceWorker' in navigator) {
+  let refreshing = false;
+  const alreadyControlled = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (alreadyControlled && !refreshing) { refreshing = true; window.location.reload(); }
+  });
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
