@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Denise's Recipe Box</title>
+<link rel="stylesheet" href="./styles.css">
+<meta name="theme-color" content="#3c5878">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+</head>
+<body>
+
+<header>
+  <h1><a class="home-link" href="#">Denise's Recipe Box</a></h1>
+  <button id="menuToggle" aria-controls="sidebar" aria-expanded="false">Collections</button>
+  <input aria-label="Search recipes and ingredients" type="search" id="search" placeholder="Search recipes..." oninput="handleSearch(this.value)">
+</header>
+
+<details class="install-help"><summary>Keep this recipe box on your phone</summary><p>iPhone: open in Safari, tap Share, then Add to Home Screen. Android: open in Chrome and choose Add to Home screen or Install app. Recipes work offline after the first visit. Photos need an internet connection. Favorites and notes are saved on this device only.</p></details>
+<div class="layout">
+  <nav id="sidebar" aria-label="Recipe collections"></nav>
+  <main id="app"></main>
+</div>
+
+<script src="./recipes.js"></script>
+<script src="./app.js"></script>
+
+</body>
+</html>
