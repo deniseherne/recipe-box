@@ -17,7 +17,7 @@ const ctx = vm.createContext({
 vm.runInContext(fs.readFileSync(root+'recipes.js','utf8'),ctx);
 vm.runInContext(fs.readFileSync(root+'app.js','utf8'),ctx);
 const url='https://theproteinchef.co/slow-cooker-taco-soup-recipe/';
-assert.equal(vm.runInContext('RECIPES.length',ctx),73);
+assert.equal(vm.runInContext('RECIPES.length',ctx),74);
 ctx.renderRecipe(encodeURIComponent(url));
 assert.match(getElement('app').innerHTML,/My experience/);
 const tried=getElement('triedRecipe'),score=getElement('recipeScore');
