@@ -101,6 +101,7 @@ function renderSidebar(activeKind, activeParam) {
   const favCount = getFavorites().size;
   const collapsed = getCollapsedGroups();
   let html = `<div class="side-label">Browse</div>`;
+  html += `<button type="button" class="side-item ${activeKind === 'plan' ? 'active' : ''}" onclick="navigate('plan')"><span>Meal plan & groceries</span></button>`;
   html += `<button type="button" class="side-item ${activeKind === 'home' ? 'active' : ''}" onclick="navigate('home')">
     <span>All Recipes</span><span class="badge">${RECIPES.length}</span>
   </button>`;
@@ -191,6 +192,7 @@ function renderRecipe(urlEncoded) {
   if (r.image) html += `<img class="hero" src="${r.image}" alt="${r.title}" onerror="this.style.display='none'">`;
   const fav = isFavorite(r.url);
   html += `<div class="detail-header-row"><h2>${r.title}</h2><button class="fav-btn-detail ${fav ? 'active' : ''}" onclick="toggleFavorite('${r.url}', event)">${fav ? '★ Favorited' : '☆ Add to Favorites'}</button></div>`;
+  if (typeof activePlan === 'function') html += `<div class="detail-plan"><label>Add to my meal plan <select id="detailPlanWeek">${weekOptions(activePlan(), 1)}</select></label><button class="secondary-button" onclick="addRecipeFromDetail('${slugify(r.url)}')">Add meal</button><a href="#plan">View plan & groceries</a><span id="detailPlanStatus" role="status"></span></div>`;
   const review = getReview(r.url);
   html += `<fieldset class="recipe-review"><legend>My experience</legend>
     <label class="tried-control"><input id="triedRecipe" type="checkbox" ${review.tried ? 'checked' : ''}> I've tried this</label>
@@ -265,6 +267,7 @@ function navigate(view, param) {
   document.getElementById('menuToggle').setAttribute('aria-expanded', 'false');
   document.getElementById('search').value = '';
   if (view === 'home') window.location.hash = '';
+  else if (view === 'plan') window.location.hash = 'plan';
   else if (view === 'favorites') window.location.hash = 'favorites';
   else if (view === 'tried') window.location.hash = 'tried';
   else if (view === 'category') window.location.hash = 'category/' + param;
@@ -274,6 +277,7 @@ function navigate(view, param) {
 function route() {
   const hash = window.location.hash.replace(/^#/, '');
   if (!hash) { renderHome(); return; }
+  if (hash === 'plan') { renderPlanner(); return; }
   if (hash === 'favorites') { renderFavorites(); return; }
   if (hash === 'tried') { renderTried(); return; }
   const [view, param] = hash.split(/\/(.+)/);

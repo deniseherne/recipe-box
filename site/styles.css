@@ -387,3 +387,75 @@ button { cursor: pointer; }
 .recipe-review select:disabled {opacity:.55;}
 #reviewStatus {flex-basis:100%;font-size:12px;color:var(--muted);}
 .tried-tag {background:#d9eadf!important;color:#235735!important;font-weight:600;}
+
+/* Meal planning */
+.plan-nav-link {color:white;text-decoration:none;border:1px solid #ffffff70;border-radius:8px;padding:8px 12px;font-size:13px;}
+.planner {max-width:1140px;margin:0 auto;font-size:14px;line-height:1.5;}
+.planner h2 {font-size:28px;margin:0;color:var(--accent-dark);letter-spacing:-.6px;}
+.planner h3 {font-size:18px;margin:0 0 8px;color:var(--accent-dark);}
+.planner h4 {font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:24px 0 8px;}
+.planner p {margin:6px 0 14px;}
+.eyebrow {font-size:11px;text-transform:uppercase;letter-spacing:.15em;font-weight:700;color:var(--muted);margin-bottom:6px;}
+.planner-heading,.week-heading,.button-row {display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.planner-heading {margin-bottom:18px;}
+.planner-heading p {color:var(--muted);margin:5px 0 0;}
+.planner-panel {background:white;border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;min-width:0;}
+.planner-settings {display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr;gap:16px;}
+.planner label,.detail-plan label {display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:600;}
+.planner input:not([type=checkbox]),.planner select,.planner textarea,.detail-plan select {width:100%;min-width:0;min-height:44px;border:1px solid #cad3de;border-radius:8px;padding:9px 10px;background:white;color:var(--text);font:inherit;font-size:16px;}
+.planner textarea {resize:vertical;}
+.planner .planner-hint {font-size:12px;font-weight:400;color:#586574;grid-column:1/-1;margin:0;}
+.planner-status {min-height:24px;color:#25573d;overflow-wrap:anywhere;}
+.primary-button,.secondary-button {min-height:44px;padding:9px 15px;border-radius:8px;border:1px solid var(--accent);font:inherit;font-weight:600;}
+.primary-button {color:white;background:var(--accent);}
+.secondary-button {color:var(--accent-dark);background:#f3f6fa;}
+.primary-button:hover,.secondary-button:hover {filter:brightness(.94);}
+button:disabled {opacity:.5;cursor:default;}
+.planner-add {display:grid;grid-template-columns:1.1fr 2fr .7fr auto;gap:12px;align-items:end;}
+.starter-callout {margin-top:20px;padding:18px;background:#edf4f0;border-radius:10px;}
+.starter-callout p {font-size:13px;}
+.plan-weeks {display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;}
+.week-heading {border-bottom:1px solid var(--border);padding-bottom:12px;}
+.week-heading span {font-size:12px;color:var(--muted);}
+.planned-meal {border-bottom:1px solid var(--border);padding:18px 0;}
+.planned-meal:last-child {border-bottom:0;padding-bottom:0;}
+.planned-meal a,.suggestion-card a {font-size:15px;font-weight:600;color:var(--accent-dark);text-decoration:none;}
+.planned-meal a:hover,.suggestion-card a:hover {text-decoration:underline;}
+.planned-meal p {font-size:12px;color:#586574;}
+.meal-controls {display:flex;align-items:end;gap:12px;flex-wrap:wrap;}
+.meal-controls label {width:104px;}
+.text-button {border:0;background:none;color:#864035;min-height:44px;padding:8px;font:inherit;}
+.scaled-ingredients {margin-top:12px;font-size:12px;}
+.scaled-ingredients summary {cursor:pointer;color:var(--accent);padding:6px 0;}
+.scaled-ingredients li {margin-bottom:5px;}
+.suggest-settings {display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin:14px 0;}
+.suggest-settings>label:first-child {width:96px;}
+.planner .check-label {flex-direction:row;align-items:center;gap:8px;min-height:44px;}
+.planner input[type=checkbox] {width:20px;height:20px;accent-color:var(--accent);flex-shrink:0;}
+.suggestion-heading {display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 14px;}
+.suggestion-heading label {flex-direction:row;align-items:center;gap:8px;}
+.suggestion-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.suggestion-card {padding:16px;border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;align-items:start;}
+.suggestion-card p {font-size:12px;color:var(--muted);flex:1;}
+.suggestion-notice {padding:14px;background:#fff7e5;border-radius:8px;}
+#extraGroceries {margin-bottom:10px;}
+.grocery-group {display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0 20px;}
+.planner .grocery-item {display:flex;flex-direction:row;align-items:start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px;}
+.grocery-item small {display:block;font-weight:400;color:var(--muted);font-size:11px;margin-top:3px;}
+.grocery-item input:checked+span .grocery-text {text-decoration:line-through;color:var(--muted);}
+.detail-plan {display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#eef3f7;border-radius:10px;padding:14px;margin:14px 0;}
+.detail-plan a {color:var(--accent);}
+#detailPlanStatus {flex-basis:100%;font-size:12px;}
+@media(max-width:900px) {.planner-settings {grid-template-columns:1fr 1fr;}.planner-add {grid-template-columns:1fr 1fr;}}
+@media(max-width:700px) {
+  .plan-nav-link {min-height:44px;display:flex;align-items:center;order:3;font-size:13px;}
+  header #search {order:4;}
+  .planner h2 {font-size:25px;}
+  .planner-panel {padding:16px;}
+  .planner-settings>label:first-child {grid-column:1/-1;}
+  .planner-add {grid-template-columns:1fr;}
+  .plan-weeks {grid-template-columns:1fr;gap:0;}
+  .grocery-group {grid-template-columns:1fr;}
+  .planner-heading {align-items:start;}
+}
+@media(max-width:420px) {.planner-settings {grid-template-columns:1fr;}}
